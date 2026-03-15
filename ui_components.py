@@ -121,7 +121,7 @@ def render_detail_panel(record: dict, insight: str, commercial_angle: str, conve
         st.markdown(f"**Opportunity score** — {record.get('opportunity_score', 0):.1f}")
 
     with c2:
-        # Topology profile: donut upstream vs peer “weight”
+        # Topology profile: donut upstream vs peer weight
         up = record.get("upstream_count", 0)
         peer = record.get("peer_count", 0)
         fig = go.Figure(data=[go.Pie(labels=["Upstreams", "Peers"], values=[up, peer], hole=0.6, marker_colors=["#4299e1", "#48bb78"])])
