@@ -112,35 +112,63 @@ def render_detail_panel(record: dict, insight: str, commercial_angle: str, conve
         st.markdown(f"**Fragility score** — {record.get('fragility_score', 0):.1f}")
         st.markdown(f"**Opportunity score** — {record.get('opportunity_score', 0):.1f}")
 
-with c2:
-    # Topology profile: donut upstream vs peer “weight”
-    up = record.get("upstream_count", 0)
-    peer = record.get("peer_count", 0)
+    def render_detail_panel(record: dict, insight: str, commercial_angle: str, conversation_starter: str) -> None:
+    """
+    Detail intelligence view: topology summary, small chart, AI insight, commercial angle, conversation starter.
+    """
+    st.subheader("Intelligence detail")
+    c1, c2 = st.columns([1, 1])
+    with c1:
+        st.markdown(f"**Network** — {record.get('name', '')} (AS{record.get('asn', '')})")
+        st.markdown(f"**Country** — {record.get('country', '')}")
+        st.markdown(f"**Upstreams** — {record.get('upstream_count', 0)}")
+        st.markdown(f"**Peers** — {record.get('peer_count', 0)}")
+        st.markdown(f"**Fragility score** — {record.get('fragility_score', 0):.1f}")
+        st.markdown(f"**Opportunity score** — {record.get('opportunity_score', 0):.1f}")
 
-    fig = go.Figure(
-        data=[
-            go.Pie(
-                labels=["Upstreams", "Peers"],
-                values=[up, peer],
-                hole=0.5
-            )
-        ]
-    )
+    def render_detail_panel(record: dict, insight: str, commercial_angle: str, conversation_starter: str) -> None:
+    """
+    Detail intelligence view: topology summary, small chart, AI insight, commercial angle, conversation starter.
+    """
+    st.subheader("Intelligence detail")
+    c1, c2 = st.columns([1, 1])
+    with c1:
+        st.markdown(f"**Network** — {record.get('name', '')} (AS{record.get('asn', '')})")
+        st.markdown(f"**Country** — {record.get('country', '')}")
+        st.markdown(f"**Upstreams** — {record.get('upstream_count', 0)}")
+        st.markdown(f"**Peers** — {record.get('peer_count', 0)}")
+        st.markdown(f"**Fragility score** — {record.get('fragility_score', 0):.1f}")
+        st.markdown(f"**Opportunity score** — {record.get('opportunity_score', 0):.1f}")
 
-    fig.update_layout(
-        title="Topology signal",
-        showlegend=True,
-        height=220
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
-
-    st.markdown("---")
-    st.markdown("**Infrastructure insight**")
-    st.info(insight)
-
-    st.markdown("**Commercial angle**")
-    st.info(commercial_angle)
-
-    st.markdown("**Conversation starter**")
-    st.info(conversation_starter)
+    with c2:
+        # Topology profile: donut upstream vs peer “weight”
+        up = record.get("upstream_count", 0)
+        peer = record.get("peer_count", 0)
+    
+        fig = go.Figure(
+            data=[
+                go.Pie(
+                    labels=["Upstreams", "Peers"],
+                    values=[up, peer],
+                    hole=0.5
+                )
+            ]
+        )
+    
+        fig.update_layout(
+            title="Topology signal",
+            showlegend=True,
+            height=220
+        )
+    
+        st.plotly_chart(fig, use_container_width=True)
+    
+        st.markdown("---")
+        st.markdown("**Infrastructure insight**")
+        st.info(insight)
+    
+        st.markdown("**Commercial angle**")
+        st.info(commercial_angle)
+    
+        st.markdown("**Conversation starter**")
+        st.info(conversation_starter)
