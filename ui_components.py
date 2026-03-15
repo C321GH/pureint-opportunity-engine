@@ -112,18 +112,35 @@ def render_detail_panel(record: dict, insight: str, commercial_angle: str, conve
         st.markdown(f"**Fragility score** — {record.get('fragility_score', 0):.1f}")
         st.markdown(f"**Opportunity score** — {record.get('opportunity_score', 0):.1f}")
 
-    with c2:
-        # Topology profile: donut upstream vs peer “weight”
-        up = record.get("upstream_count", 0)
-        peer = record.get("peer_count", 0)
-        fig = go.Figure(data=[go.Pie(labels=["Upstreams", "Peers"], values=[up, peer], hole=0.6, marker_colors=["#4299e1", "#48bb78"])])
-        fig.update_layout(**CHART_LAYOUT, title_text="Topology signal", showlegend=True, height=220)
-        st.plotly_chart(fig, use_container_width=True)
+with c2:
+    # Topology profile: donut upstream vs peer “weight”
+    up = record.get("upstream_count", 0)
+    peer = record.get("peer_count", 0)
+
+    fig = go.Figure(
+        data=[
+            go.Pie(
+                labels=["Upstreams", "Peers"],
+                values=[up, peer],
+                hole=0.5
+            )
+        ]
+    )
+
+    fig.update_layout(
+        title="Topology signal",
+        showlegend=True,
+        height=220
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
 
     st.markdown("---")
     st.markdown("**Infrastructure insight**")
     st.info(insight)
+
     st.markdown("**Commercial angle**")
     st.info(commercial_angle)
+
     st.markdown("**Conversation starter**")
-    st.success(conversation_starter)
+    st.info(conversation_starter)
