@@ -16,7 +16,7 @@ __all__ = [
     "render_detail_panel",
 ]
 
-# Shared chart layout: dark, minimal grid
+# Shared chart layout: dark, minimal grid (for cartesian charts: bar, scatter)
 CHART_LAYOUT = {
     "paper_bgcolor": "rgba(0,0,0,0)",
     "plot_bgcolor": "rgba(18,22,28,0.8)",
@@ -24,6 +24,16 @@ CHART_LAYOUT = {
     "margin": {"t": 24, "b": 32, "l": 44, "r": 24},
     "xaxis": {"gridcolor": "rgba(160,174,192,0.15)", "zeroline": False},
     "yaxis": {"gridcolor": "rgba(160,174,192,0.15)", "zeroline": False},
+    "showlegend": True,
+    "legend": {"orientation": "h", "yanchor": "bottom", "y": 1.02, "xanchor": "right", "x": 1, "font": {"size": 10}},
+}
+
+# Layout for Pie/donut charts (no xaxis/yaxis - causes TypeError on Pie figures)
+PIE_LAYOUT = {
+    "paper_bgcolor": "rgba(0,0,0,0)",
+    "plot_bgcolor": "rgba(18,22,28,0.8)",
+    "font": {"color": "#a0aec0", "size": 11},
+    "margin": {"t": 24, "b": 32, "l": 44, "r": 24},
     "showlegend": True,
     "legend": {"orientation": "h", "yanchor": "bottom", "y": 1.02, "xanchor": "right", "x": 1, "font": {"size": 10}},
 }
@@ -72,7 +82,7 @@ def chart_peer_vs_upstream(networks: list[dict]) -> go.Figure:
     ])
     fig = px.scatter(df, x="Upstreams", y="Peers", text="Network", size_max=14)
     fig.update_traces(textposition="top center", marker=dict(line=dict(width=1, color="#4a5568")))
-    fig.update_layout(**CHART_LAYOUT, title_text="Peer count vs upstream count")
+    fig.update_layout(**CHART_LAYOUT, title="Peer count vs upstream count")
     return fig
 
 
@@ -84,7 +94,7 @@ def chart_opportunity_pipeline(networks: list[dict]) -> go.Figure:
         counts[r] = sum(1 for n in networks if n.get("risk_label") == r)
     df = pd.DataFrame([{"Risk": k, "Count": v} for k, v in counts.items()])
     fig = px.bar(df, x="Risk", y="Count", color="Count", color_continuous_scale="Viridis")
-    fig.update_layout(**CHART_LAYOUT, title_text="Opportunity pipeline by risk")
+    fig.update_layout(**CHART_LAYOUT, title="Opportunity pipeline by risk")
     fig.update_coloraxes(showscale=False)
     return fig
 
@@ -102,7 +112,7 @@ def chart_resilience_scatter(networks: list[dict]) -> go.Figure:
     ])
     fig = px.scatter(df, x="Fragility", y="Opportunity", color="Risk", text="Network", color_discrete_map={"High": "#fc8181", "Medium": "#f6ad55", "Low": "#68d391"})
     fig.update_traces(textposition="top center")
-    fig.update_layout(**CHART_LAYOUT, title_text="Network resilience scatter")
+    fig.update_layout(**CHART_LAYOUT, title="Network resilience scatter")
     return fig
 
 
@@ -125,7 +135,7 @@ def render_detail_panel(record: dict, insight: str, commercial_angle: str, conve
         up = record.get("upstream_count", 0)
         peer = record.get("peer_count", 0)
         fig = go.Figure(data=[go.Pie(labels=["Upstreams", "Peers"], values=[up, peer], hole=0.6, marker_colors=["#4299e1", "#48bb78"])])
-        fig.update_layout(**CHART_LAYOUT, title_text="Topology signal", showlegend=True, height=220)
+        fig.update_layout(**PIE_LAYOUT, title="Topology signal", height=220)
         st.plotly_chart(fig, use_container_width=True)
 
     st.markdown("---")
